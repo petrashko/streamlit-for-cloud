@@ -3,6 +3,11 @@ import streamlit as st
 from task import Task
 from jokes import generate_joke
 
+if "joke" not in st.session_state:
+    api_key = st.secrets['jokes_api']['api_key']
+    st.session_state.joke = generate_joke(api_key)
+
+
 if "task_list" not in st.session_state:
     st.session_state.task_list = []
 
@@ -25,6 +30,10 @@ with st.sidebar:
     if st.button("Add task", type="primary"):
         if len(task.strip()) > 0:
             add_task(task.strip())
+
+
+st.info(st.session_state.joke)
+
 
 total_tasks = len(task_list)
 completed_tasks = sum(1 for task in task_list if task.is_done)
